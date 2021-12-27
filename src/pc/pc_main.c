@@ -39,6 +39,10 @@
 
 #include "compat.h"
 
+#ifdef AUDIO_DEBUG
+#include <stdio.h>
+#endif
+
 #define CONFIG_FILE "settings.ini"
 
 OSMesg D_80339BEC;
@@ -286,6 +290,9 @@ int WINAPI WinMain(UNUSED HINSTANCE hInstance, UNUSED HINSTANCE hPrevInstance, U
 }
 #else
 int main(int argc, const char *argv[]) {
+#ifdef AUDIO_DEBUG
+    remove("audio_buffer.bin");
+#endif
     main_func(argc > 1 ? argv[1] : NULL);
     return 0;
 }

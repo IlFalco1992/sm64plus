@@ -29,6 +29,8 @@ COMPILER ?= ido
 TARGET_32BIT ?= 0
 # If custom textures are supported
 CUSTOM_TEXTURES ?= 0
+# If debugging audio
+AUDIO_DEBUG ?= 0
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
@@ -478,6 +480,10 @@ ifeq ($(CUSTOM_TEXTURES),1)
   CFLAGS += -DCUSTOM_TEXTURES
 else
   SKYCONV_ARGS := 
+endif
+
+ifeq ($(AUDIO_DEBUG),1)
+  CFLAGS += -DAUDIO_DEBUG
 endif
 
 ASFLAGS := -I include -I $(BUILD_DIR) $(VERSION_ASFLAGS)

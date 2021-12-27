@@ -6,6 +6,10 @@
 #include "SDL2/SDL.h"
 #endif
 
+#ifdef AUDIO_DEBUG
+#include <stdio.h>
+#endif
+
 #include "audio_api.h"
 
 #include "../../game/settings.h"
@@ -47,6 +51,19 @@ static void audio_sdl_play(const uint8_t *buf, size_t len) {
         SDL_memset(mix_buf, 0, len);
         SDL_MixAudioFormat(mix_buf, buf, AUDIO_S16, len, SDL_MIX_MAXVOLUME * configOverallVolume);
         SDL_QueueAudio(dev, mix_buf, len);
+
+#ifdef AUDIO_DEBUG
+        FILE *fptr;
+
+        if ((fptr = fopen("audio_buffer.bin","ab+")) == NULL){
+            printf("Error! opening file");
+            // Program exits if the file pointer returns NULL.
+            exit(2);
+        }
+
+        fwrite(mix_buf, sizeof(s16), len/2, fptr);
+        fclose(fptr);
+#endif
     }
 }
 
