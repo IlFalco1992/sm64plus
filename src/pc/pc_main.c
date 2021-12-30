@@ -28,7 +28,10 @@
 
 #include "audio/audio_api.h"
 #include "audio/audio_sdl.h"
+#include "audio/audio_pa.h"
 #include "audio/audio_null.h"
+
+#include <stdio.h>
 
 #include "controller/controller_keyboard.h"
 
@@ -78,8 +81,6 @@ void send_display_list(struct SPTask *spTask) {
     }
     gfx_run((Gfx *)spTask->task.t.data_ptr);
 }
-
-#define printf
 
 #ifdef VERSION_EU
 #define SAMPLES_HIGH 656
@@ -259,8 +260,8 @@ void main_func(const char* gfx_dir) {
     wm_api->set_fullscreen_changed_callback(on_fullscreen_changed);
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_mouse_move, keyboard_on_mouse_press);
     
-    if (audio_sdl.init()) {
-        audio_api = &audio_sdl;
+    if (audio_pa.init()) {
+        audio_api = &audio_pa;
     }
     else {
         audio_api = &audio_null;
