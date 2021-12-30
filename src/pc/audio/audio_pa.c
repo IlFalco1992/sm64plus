@@ -36,7 +36,6 @@ static int paCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer;
     //(void) framesPerBuffer;
     (void) userData;
-    printf("diff: %.12f\n", timeInfo->currentTime);
     lastStream = timeInfo->currentTime;
 
     pthread_mutex_lock(&lock);
