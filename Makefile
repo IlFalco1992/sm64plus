@@ -463,7 +463,7 @@ ifeq ($(TARGET_LINUX),1)
 endif
 ifeq ($(TARGET_MACOS),1)
   GFX_CFLAGS  +=
-  GFX_LDFLAGS += -framework OpenGL -lX11 -lSDL2
+  GFX_LDFLAGS += -framework OpenGL -lX11 -lSDL2 `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0`
 endif
 ifeq ($(TARGET_WEB),1)
   GFX_CFLAGS  += -s
@@ -472,8 +472,8 @@ endif
 
 GFX_CFLAGS += -DWIDESCREEN
 
-CC_CHECK := $(CC) -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) -Wall -Wextra -Wno-format-security -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS)
-CFLAGS := $(OPT_FLAGS) $(INCLUDE_CFLAGS) -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS) -fno-strict-aliasing -fwrapv -march=native
+CC_CHECK := $(CC) -fsyntax-only -fsigned-char `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0` $(INCLUDE_CFLAGS) -Wall -Wextra -Wno-format-security -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS)
+CFLAGS := $(OPT_FLAGS) `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0` $(INCLUDE_CFLAGS) -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS) -fno-strict-aliasing -fwrapv -march=native
 
 ifeq ($(CUSTOM_TEXTURES),1)
   SKYCONV_ARGS := --store-names --write-tiles "$(BUILD_DIR)/textures/skybox_tiles"
