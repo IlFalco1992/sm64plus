@@ -6,8 +6,6 @@
 #include <assert.h>
 #if defined(TARGET_MACOS) || defined(TARGET_LINUX)
 #include <libgen.h>
-#endif
-#ifdef TARGET_LINUXgit
 #include <unistd.h>
 #endif
 #include <stdio.h>
