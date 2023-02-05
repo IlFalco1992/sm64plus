@@ -467,7 +467,7 @@ ifeq ($(TARGET_LINUX),1)
 endif
 ifeq ($(TARGET_MACOS),1)
   GFX_CFLAGS  +=
-  GFX_LDFLAGS += -framework OpenGL -lX11 -lSDL2 `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0`
+  GFX_LDFLAGS += -framework OpenGL -lX11 -lSDL2
 endif
 ifeq ($(TARGET_WEB),1)
   GFX_CFLAGS  += -s
@@ -495,6 +495,9 @@ endif
 
 ifeq ($(AUDIO_DEBUG),1)
   CFLAGS += -DAUDIO_DEBUG
+endif
+ifeq ($(AUDIO_PA),1)
+  CFLAGS += -DAUDIO_PA
 endif
 
 ASFLAGS := -I include -I $(BUILD_DIR) $(VERSION_ASFLAGS)
