@@ -272,10 +272,16 @@ void main_func(const char* gfx_dir) {
     
     wm_api->set_fullscreen_changed_callback(on_fullscreen_changed);
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_mouse_move, keyboard_on_mouse_press);
-    
+
+#if defined(AUDIO_PA)
     if (audio_pa.init()) {
         audio_api = &audio_pa;
     }
+#else
+    if (audio_sdl.init()) {
+        audio_api = &audio_sdl;
+    }
+#endif
     else {
         audio_api = &audio_null;
     }
