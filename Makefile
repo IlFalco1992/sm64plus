@@ -35,6 +35,8 @@ AUDIO_PA ?= 0
 AUDIO_DEBUG ?= 0
 # Select level of gcc optimization
 OPTIMIZATION ?= -O2
+# Debug flag
+DEBUG ?= 0
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
@@ -478,6 +480,12 @@ GFX_CFLAGS += -DWIDESCREEN
 
 CC_CHECK := $(CC) -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) -Wall -Wextra -Wno-format-security -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS)
 CFLAGS := $(OPT_FLAGS) $(INCLUDE_CFLAGS) -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS) -fno-strict-aliasing -fwrapv -march=native
+
+ifeq ($(DEBUG), 1)
+  CC_CHECK += -g
+  CFLAGS += -g
+  GFX_LDFLAGS += -g
+endif
 
 # Compiler and linker flags for audio backend
 ifeq ($(AUDIO_PA), 1)
