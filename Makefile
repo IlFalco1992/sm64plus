@@ -441,13 +441,13 @@ ifeq ($(TARGET_WINDOWS),1)
 endif
 ifeq ($(TARGET_LINUX),1)
   SDLCONFIG_LDFLAGS := $(shell sdl2-config --libs)
-  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_LINUX `pkg-config --cflags libusb-1.0`
-  PLATFORM_LDFLAGS := $(SDLCONFIG_LDFLAGS) -lm -lpthread `pkg-config --libs libusb-1.0` -no-pie
+  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_LINUX $(shell pkg-config --cflags libusb-1.0)
+  PLATFORM_LDFLAGS := $(SDLCONFIG_LDFLAGS) -lm -lpthread $(shell pkg-config --libs libusb-1.0) -no-pie
 endif
 ifeq ($(TARGET_MACOS),1)
   SDLCONFIG_LDFLAGS := $(shell sdl2-config --libs)
-  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_MACOS -DTIMER_ABSTIME=1 `pkg-config --cflags libusb-1.0`
-  PLATFORM_LDFLAGS := $(SDLCONFIG_LDFLAGS) -lm -lpthread `pkg-config --libs libusb-1.0` -no-pie
+  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_MACOS -DTIMER_ABSTIME=1 $(shell pkg-config --cflags libusb-1.0)
+  PLATFORM_LDFLAGS := $(SDLCONFIG_LDFLAGS) -lm -lpthread $(shell pkg-config --libs libusb-1.0) -no-pie
 endif
 ifeq ($(TARGET_WEB),1)
   PLATFORM_CFLAGS  := -DTARGET_WEB
