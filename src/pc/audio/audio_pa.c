@@ -47,6 +47,18 @@ static int paCallback( const void *inputBuffer, void *outputBuffer,
         *out++ = samples[i+1]; //right
     }
     newSamples = false;
+#ifdef AUDIO_DEBUG
+    FILE *fptr;
+
+    if ((fptr = fopen("audio_buffer.bin","ab+")) == NULL){
+        printf("Error! opening file");
+        // Program exits if the file pointer returns NULL.
+        exit(2);
+    }
+
+    fwrite(start, sizeof(float), TABLE_SIZE, fptr);
+    fclose(fptr);
+#endif
     pthread_mutex_unlock(&lock);
 
     return paContinue;
@@ -62,8 +74,9 @@ static bool audio_pa_init(void) {
     PaStreamParameters outputParameters;
     PaStream *stream;
     PaError err;
-
-    printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
+#ifdef AUDIO_DEBUG
+    printf("SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
+#endif
 
     err = Pa_Initialize();
     if( err != paNoError ){
@@ -86,9 +99,9 @@ static bool audio_pa_init(void) {
         &outputParameters,
         SAMPLE_RATE,
         FRAMES_PER_BUFFER,
-        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+        paPrimeOutputBuffersUsingStreamCallback,
         paCallback,
-        samples );
+        NULL );
     if( err != paNoError ) {
         printf("Couldn't open portaudio stream\n");
         return false;
@@ -128,19 +141,8 @@ static void audio_pa_play(const uint8_t *buf, size_t len) {
     }
     newSamples = true;
     pthread_cond_signal(&newSamplesCond);
-#ifdef AUDIO_DEBUG
-        FILE *fptr;
 
-        if ((fptr = fopen("audio_buffer.bin","ab+")) == NULL){
-            printf("Error! opening file");
-            // Program exits if the file pointer returns NULL.
-            exit(2);
-        }
-
-        fwrite(samples, sizeof(float), TABLE_SIZE, fptr);
-        fclose(fptr);
-#endif
-        pthread_mutex_unlock(&lock);
+    pthread_mutex_unlock(&lock);
 }
 
 struct AudioAPI audio_pa = {

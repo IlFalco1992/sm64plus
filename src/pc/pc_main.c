@@ -48,6 +48,10 @@
 
 #define CONFIG_FILE "settings.ini"
 
+#ifdef AUDIO_DEBUG
+#include <time.h>
+#endif
+
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
 
@@ -114,6 +118,9 @@ static void patch_interpolations(void) {
 }
 
 void produce_one_frame(void) {
+#ifdef AUDIO_DEBUG
+    clock_t start = clock();
+#endif
     gfx_start_frame();
     game_loop_one_iteration();
     
@@ -142,6 +149,12 @@ void produce_one_frame(void) {
     }
     send_display_list(gGfxSPTask);
     gfx_end_frame();
+#ifdef AUDIO_DEBUG
+    clock_t end = clock();
+    double time_taken = ((double)(end - start))/CLOCKS_PER_SEC;
+    if (time_taken > (float)SAMPLES_HIGH/32000.0)
+        printf("Frame time: %f -  Audio Buffer size: %f\n", time_taken, (float)SAMPLES_HIGH/32000.0);
+#endif
 }
 
 #ifdef TARGET_WEB
