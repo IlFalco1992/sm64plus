@@ -29,6 +29,8 @@ COMPILER ?= ido
 TARGET_32BIT ?= 0
 # If custom textures are supported
 CUSTOM_TEXTURES ?= 0
+# If portaudio
+AUDIO_PA ?= 0
 # If debugging audio
 AUDIO_DEBUG ?= 0
 # Select level of gcc optimization
@@ -474,8 +476,15 @@ endif
 
 GFX_CFLAGS += -DWIDESCREEN
 
-CC_CHECK := $(CC) -fsyntax-only -fsigned-char `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0` $(INCLUDE_CFLAGS) -Wall -Wextra -Wno-format-security -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS)
-CFLAGS := $(OPT_FLAGS) `pkg-config --libs portaudio-2.0` `pkg-config --cflags portaudio-2.0` $(INCLUDE_CFLAGS) -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS) -fno-strict-aliasing -fwrapv -march=native
+CC_CHECK := $(CC) -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) -Wall -Wextra -Wno-format-security -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS)
+CFLAGS := $(OPT_FLAGS) $(INCLUDE_CFLAGS) -D_LANGUAGE_C $(VERSION_CFLAGS) $(MATCH_CFLAGS) $(PLATFORM_CFLAGS) $(GFX_CFLAGS) $(GRUCODE_CFLAGS) -fno-strict-aliasing -fwrapv -march=native
+
+# Compiler and linker flags for audio backend
+ifeq ($(AUDIO_PA), 1)
+  CC_CHECK += $(shell pkg-config --libs portaudio-2.0) $(shell pkg-config --cflags portaudio-2.0)
+  CFLAGS += $(shell pkg-config --libs portaudio-2.0) $(shell pkg-config --cflags portaudio-2.0)
+  GFX_LDFLAGS += $(shell pkg-config --libs portaudio-2.0) $(shell pkg-config --cflags portaudio-2.0)
+endif
 
 ifeq ($(CUSTOM_TEXTURES),1)
   SKYCONV_ARGS := --store-names --write-tiles "$(BUILD_DIR)/textures/skybox_tiles"

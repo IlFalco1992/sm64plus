@@ -1,3 +1,4 @@
+#if defined(AUDIO_PA)
 #include <portaudio.h>
 #include "audio_api.h"
 #include "audio_pa.h"
@@ -151,3 +152,4 @@ struct AudioAPI audio_pa = {
     audio_pa_get_desired_buffered,
     audio_pa_play
 };
+#endif
