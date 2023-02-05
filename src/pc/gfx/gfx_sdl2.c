@@ -363,13 +363,15 @@ static bool gfx_sdl_start_frame(void) {
     return true;
 }
 
+static const int frame_time = 1000 / 60;
 static void sync_framerate_with_timer(void) {
-    // Number of milliseconds a frame should take (60 fps)
-    const Uint32 FRAME_TIME = 1000 / 60;
-    Uint32 elapsed = SDL_GetTicks() - last_time;
-
-    if (elapsed < FRAME_TIME)
-        SDL_Delay(FRAME_TIME - elapsed);
+    static Uint32 last_time = 0;
+    // get base timestamp on the first frame (might be different from 0)
+    if (last_time == 0) last_time = SDL_GetTicks();
+    const int elapsed = SDL_GetTicks() - last_time;
+    if (elapsed < frame_time)
+        SDL_Delay(frame_time - elapsed);
+    last_time += frame_time;
 }
 
 static void gfx_sdl_swap_buffers_begin(void) {
