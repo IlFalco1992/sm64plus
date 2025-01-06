@@ -85,7 +85,7 @@ ifeq ($(VERSION),sh)
   VERSION_DEF := VERSION_SH
   GRUCODE_DEF := F3D_NEW
 # TODO: GET RID OF THIS!!! We should mandate assets for Shindou like EU but we dont have the addresses extracted yet so we'll just pretend you have everything extracted for now.
-  NOEXTRACT := 1 
+  NOEXTRACT := 1
 else
   $(error unknown version "$(VERSION)")
 endif
@@ -448,7 +448,7 @@ ifeq ($(TARGET_LINUX),1)
 endif
 ifeq ($(TARGET_MACOS),1)
   SDLCONFIG_LDFLAGS := $(shell sdl2-config --libs)
-  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_MACOS -DTIMER_ABSTIME=1 $(shell pkg-config --cflags libusb-1.0)
+  PLATFORM_CFLAGS  := $(SDLCONFIG_CFLAGS) -DTARGET_MACOS -DTIMER_ABSTIME=1 $(shell pkg-config --cflags libusb-1.0) -Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types
   PLATFORM_LDFLAGS := $(SDLCONFIG_LDFLAGS) -lm -lpthread $(shell pkg-config --libs libusb-1.0) -no-pie
 endif
 ifeq ($(TARGET_WEB),1)
@@ -464,7 +464,7 @@ ifeq ($(TARGET_WINDOWS),1)
   GFX_LDFLAGS += -lpthread -lglew32 -lglu32 -lopengl32
 endif
 ifeq ($(TARGET_LINUX),1)
-  GFX_CFLAGS  += 
+  GFX_CFLAGS  +=
   GFX_LDFLAGS += -lGL -lX11 -lXrandr
 endif
 ifeq ($(TARGET_MACOS),1)
@@ -498,7 +498,7 @@ ifeq ($(CUSTOM_TEXTURES),1)
   SKYCONV_ARGS := --store-names --write-tiles "$(BUILD_DIR)/textures/skybox_tiles"
   CFLAGS += -DCUSTOM_TEXTURES
 else
-  SKYCONV_ARGS := 
+  SKYCONV_ARGS :=
 endif
 
 ifeq ($(AUDIO_DEBUG),1)

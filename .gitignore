@@ -75,3 +75,5 @@ sm64config.txt
 
 .idea
 .DS_Store
+
+compile_commands.json
